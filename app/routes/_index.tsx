@@ -1,10 +1,6 @@
-import {
-  createCookieSessionStorage,
-  type MetaFunction,
-} from "@remix-run/cloudflare";
+import { type MetaFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
-import { Authenticator } from "remix-auth";
-import { TOTPStrategy } from "remix-auth-totp";
+import { createAuthenticator } from "~/auth.server";
 
 interface User {
   id: string;
@@ -19,22 +15,10 @@ export const meta: MetaFunction = () => {
 };
 
 export function loader() {
-  const authSessionStorage = createCookieSessionStorage({
-    cookie: {
-      name: "_auth",
-      path: "/",
-      sameSite: "lax",
-      httpOnly: true,
-      secrets: ["SECRET"],
-      secure: false,
-    },
-  });
-  const authenticator = new Authenticator<User>(authSessionStorage, {
-    throwOnError: true,
-  });
+  const authenticator = createAuthenticator();
   return {
-    authenticator
-  }
+    authenticator,
+  };
 }
 
 export default function Index() {
@@ -45,4 +29,10 @@ export default function Index() {
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
+}
+function invariant(
+  arg0: string | number | boolean | Date | undefined,
+  arg1: string
+) {
+  throw new Error("Function not implemented.");
 }
