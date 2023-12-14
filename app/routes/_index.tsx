@@ -2,11 +2,6 @@ import { type MetaFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { createAuthenticator } from "~/auth.server";
 
-interface User {
-  id: string;
-  email: string;
-}
-
 export const meta: MetaFunction = () => {
   return [
     { title: "Remix Auth Totp Sandbox" },
@@ -29,10 +24,4 @@ export default function Index() {
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
-}
-function invariant(
-  arg0: string | number | boolean | Date | undefined,
-  arg1: string
-) {
-  throw new Error("Function not implemented.");
 }
