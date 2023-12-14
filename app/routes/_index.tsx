@@ -1,15 +1,6 @@
-import {
-  createCookieSessionStorage,
-  type MetaFunction,
-} from "@remix-run/cloudflare";
+import { type MetaFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
-import { Authenticator } from "remix-auth";
-import { TOTPStrategy } from "remix-auth-totp";
-
-interface User {
-  id: string;
-  email: string;
-}
+import { generateTOTP, getTOTPAuthUri, verifyTOTP } from "@epic-web/totp";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,22 +10,13 @@ export const meta: MetaFunction = () => {
 };
 
 export function loader() {
-  const authSessionStorage = createCookieSessionStorage({
-    cookie: {
-      name: "_auth",
-      path: "/",
-      sameSite: "lax",
-      httpOnly: true,
-      secrets: ["SECRET"],
-      secure: false,
-    },
+  const { otp, secret, digits, period, algorithm } = generateTOTP({
+    algorithm: "SHA256",
+    period: 10 * 60,
   });
-  const authenticator = new Authenticator<User>(authSessionStorage, {
-    throwOnError: true,
-  });
-  return {
-    authenticator
-  }
+  const isValid = verifyTOTP({ otp, secret, digits, period, algorithm });
+
+  return { otp, secret, period, digits, algorithm, isValid };
 }
 
 export default function Index() {
