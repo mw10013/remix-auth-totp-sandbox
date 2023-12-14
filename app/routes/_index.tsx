@@ -1,6 +1,6 @@
 import { type MetaFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
-import { createAuthenticator } from "~/auth.server";
+import { createToken } from "~/util.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,11 +9,11 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+//     process.env.NODE_DEBUG && (debugEnv = process.env.NODE_DEBUG, debugEnv = debugEnv.replace(/[|\\{}()[\]^$+?.]/g, "\\$&").replace(/\*/g, ".*").replace(/,/g, "$|^").toUpperCase(), debugEnvRegex = new RegExp("^" + debugEnv + "$", "i"));
+
 export function loader() {
-  const authenticator = createAuthenticator();
-  return {
-    authenticator,
-  };
+  const token = createToken();
+  return { env: process.env, token };
 }
 
 export default function Index() {

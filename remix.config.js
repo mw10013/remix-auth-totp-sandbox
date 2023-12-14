@@ -16,6 +16,6 @@ export default {
     modules: { crypto: true, stream: true },
     globals: {
       process: true,
-    },
+    }
   },
 };
