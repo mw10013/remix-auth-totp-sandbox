@@ -13,8 +13,9 @@ export default {
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",
   serverNodeBuiltinsPolyfill: {
-    modules: { crypto: true, stream: true },
+    modules: { buffer: true, crypto: true, stream: true },
     globals: {
+      Buffer: true,
       process: true,
     },
   },
